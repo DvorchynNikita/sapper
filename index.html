@@ -1,549 +1,466 @@
 <!doctype html>
 <html lang="uk">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Сапер — Modern HTML/JS</title>
-  <style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Сапер — Dark / Light (Авто)</title>
+<style>
+  :root{
+    --cell-size:40px;
+    --gap:8px;
+    --radius:14px;
+    --glass: rgba(255,255,255,0.04);
+    --muted: #9aa7bb;
+    --accent: #f59e0b;
+    --bg-grad: linear-gradient(180deg,#071028 0%,#071028 100%);
+    --panel: rgba(255,255,255,0.03);
+    --text: #e6eef8;
+    --glass-2: rgba(255,255,255,0.02);
+  }
+  /* light theme overrides */
+  @media (prefers-color-scheme: light){
     :root{
-      --bg:#0f1724;
-      --panel:#0b1220;
-      --muted:#95a3b8;
+      --glass: rgba(2,6,23,0.03);
+      --muted:#475569;
       --accent:#f59e0b;
-      --glass: rgba(255,255,255,0.04);
-      --cell-size: 36px;
+      --bg-grad: linear-gradient(180deg,#f6f8fb 0%,#eef2ff 100%);
+      --panel: rgba(2,6,23,0.04);
+      --text:#07101a;
+      --glass-2: rgba(2,6,23,0.02);
     }
-    *{box-sizing:border-box}
-    html,body{height:100%;}
-    body{
-      margin:0;
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
-      background:
-        radial-gradient(1200px 600px at 10% 10%, rgba(99,102,241,0.08), transparent 6%),
-        linear-gradient(180deg, #071028 0%, #081426 100%);
-      color:#e6eef8;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      padding:24px;
-      display:flex;
-      align-items:flex-start;
-      justify-content:center;
-      gap:20px;
-      min-height:100vh;
-    }
+  }
 
-    .container{
-      width:100%;
-      max-width:1100px;
-    }
+  html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial; -webkit-font-smoothing:antialiased;}
+  body{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    background: var(--bg-grad);
+    color:var(--text);
+  }
 
-    header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:18px;
-    }
-    h1{display:flex;align-items:center;gap:12px;font-size:20px;margin:0}
-    .logo{
-      width:44px;height:44px;border-radius:10px;
-      background:linear-gradient(135deg,#0f1724,#111827);
-      display:flex;align-items:center;justify-content:center;
-      box-shadow:0 6px 20px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
-      border:1px solid rgba(255,255,255,0.03);
-    }
-    .logo svg{filter:drop-shadow(0 6px 16px rgba(0,0,0,0.6))}
+  .app{
+    width:100%;
+    max-width:1100px;
+    display:grid;
+    grid-template-columns: 1fr 320px;
+    gap:20px;
+    align-items:start;
+  }
 
-    .controls{display:flex;gap:8px;align-items:center}
-    .segmented{display:flex;background:var(--glass);padding:6px;border-radius:999px;border:1px solid rgba(255,255,255,0.03)}
-    .segmented button{background:transparent;border:none;color:var(--muted);padding:8px 12px;border-radius:999px;cursor:pointer;font-weight:600}
-    .segmented button.active{color:var(--bg);background:var(--accent);box-shadow:0 6px 18px rgba(245,158,11,0.12)}
-    .btn{background:var(--accent);border:none;color:#071028;padding:8px 14px;border-radius:12px;cursor:pointer;font-weight:700;box-shadow:0 8px 24px rgba(20,20,20,0.4)}
-    .icon-btn{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px;border-radius:10px;color:var(--muted);cursor:pointer}
+  header{
+    grid-column:1/-1;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    margin-bottom:6px;
+  }
+  h1{font-size:1.2rem;margin:0;display:flex;gap:12px;align-items:center}
+  .logo{
+    width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.03));
+    box-shadow: 0 8px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+    border:1px solid var(--panel);
+  }
 
-    main.panel{
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius:20px;padding:18px;border:1px solid rgba(255,255,255,0.03);
-      box-shadow: 0 20px 60px rgba(2,6,23,0.6);
-      display:grid;grid-template-columns:1fr 300px;gap:18px;align-items:start;
-    }
+  .panel{
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+    border-radius: var(--radius);
+    padding:16px;
+    border:1px solid var(--panel);
+    box-shadow: 0 20px 60px rgba(2,6,23,0.45);
+  }
 
-    /* left: board container */
-    .board-wrap{
-      background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent);
-      padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,0.02);
-    }
+  .controls{display:flex;gap:10px;align-items:center}
+  .seg{display:flex;background:var(--glass);padding:6px;border-radius:999px;border:1px solid var(--panel)}
+  .seg button{background:transparent;border:none;padding:8px 12px;border-radius:999px;color:var(--muted);cursor:pointer;font-weight:700}
+  .seg button.active{background:var(--accent);color:var(--text);box-shadow:0 8px 20px rgba(245,158,11,0.12)}
 
-    .board{
-      display:grid;
-      gap:6px;
-      width:100%;
-      user-select:none;
-      touch-action: manipulation;
-      justify-content:center;
-    }
+  .btn{background:var(--accent);color:var(--text);border:none;padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:800}
+  .icon-btn{background:transparent;border:1px solid var(--panel);padding:8px;border-radius:10px;color:var(--muted);cursor:pointer}
 
-    /* right panel */
-    aside.info{
-      color:var(--muted);
-      font-size:14px;
-    }
-    .card{
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
-      padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);
-      margin-bottom:12px;
-    }
+  /* layout */
+  .left{min-height:380px}
+  .top-stats{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+  .stat{background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent);padding:8px 12px;border-radius:12px;border:1px solid var(--panel);text-align:center;min-width:84px}
+  .stat .label{font-size:12px;color:var(--muted)}
+  .stat .value{font-family:monospace;font-size:18px;font-weight:800}
 
-    .stat-row{display:flex;gap:8px;align-items:center}
-    .stat{background:var(--glass);padding:8px;border-radius:10px;flex:1;text-align:center}
+  /* board */
+  .board-wrap{padding:10px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border:1px solid var(--panel)}
+  .board{display:grid;gap:8px;justify-content:center;touch-action:manipulation}
+  .cell{
+    width:var(--cell-size);height:var(--cell-size);display:flex;align-items:center;justify-content:center;
+    border-radius:10px;font-weight:800;font-size:15px;user-select:none;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
+    border:1px solid rgba(255,255,255,0.03);
+    box-shadow: 0 6px 18px rgba(2,6,23,0.45), inset 0 1px 0 rgba(255,255,255,0.02);
+    cursor:pointer; transition:transform .07s, box-shadow .12s, background .12s;
+  }
+  .cell:active{transform:translateY(1px) scale(.995)}
+  .cell.hidden{background:linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.02));}
+  .cell.revealed{background:transparent;box-shadow: inset 0 1px 0 rgba(255,255,255,0.02); cursor:default}
+  .cell.mine.revealed{background:linear-gradient(180deg,#7f1d1d,#4c0808);color:#fff}
+  .flag{color:var(--accent);font-size:18px}
 
-    /* cell styles */
-    .cell{
-      width:var(--cell-size);height:var(--cell-size);
-      display:flex;align-items:center;justify-content:center;
-      border-radius:8px;cursor:pointer;font-weight:700;
-      transition:transform .08s ease, background .12s ease, box-shadow .12s ease;
-      box-shadow: 0 4px 14px rgba(2,6,23,0.6);
-      border:1px solid rgba(255,255,255,0.03);
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
-      color:#e6eef8;
-      font-size:14px;
-      position:relative;
-      user-select:none;
-    }
-    .cell:active{transform:translateY(1px) scale(.995)}
-    .cell.hidden{background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.04));}
-    .cell.revealed{
-      background: linear-gradient(180deg,#0b1220,#07101a); border-radius:8px;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
-      color:#cfe4ff;font-weight:800;
-    }
-    .cell.mine.revealed{background:linear-gradient(180deg,#7f1d1d,#4c0808); color:#fff}
-    .flag{font-size:16px;color:var(--accent);}
+  /* numbers */
+  .n1{color:#60a5fa}
+  .n2{color:#34d399}
+  .n3{color:#fb7185}
+  .n4{color:#818cf8}
+  .n5{color:#fbbf24}
+  .n6{color:#f472b6}
+  .n7{color:#94a3b8}
+  .n8{color:#cbd5e1}
 
-    /* number colors */
-    .n1{color:#60a5fa}
-    .n2{color:#34d399}
-    .n3{color:#fb7185}
-    .n4{color:#818cf8}
-    .n5{color:#fbbf24}
-    .n6{color:#f472b6}
-    .n7{color:#94a3b8}
-    .n8{color:#cbd5e1}
+  /* right column */
+  aside.info{display:flex;flex-direction:column;gap:12px}
+  .info .card{padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border:1px solid var(--panel);color:var(--muted)}
+  .info .card h4{margin:0 0 6px 0;color:var(--text)}
 
-    .cursor-outline{outline:2px solid rgba(245,158,11,0.16);border-radius:8px}
+  footer{grid-column:1/-1;text-align:center;margin-top:8px;color:var(--muted);font-size:13px}
 
-    /* responsive */
-    @media (max-width:900px){
-      main.panel{grid-template-columns:1fr; padding:12px}
-      aside.info{order:2}
-    }
-    @media (max-width:480px){
-      :root{--cell-size:36px}
-    }
-  </style>
+  /* responsiveness */
+  @media (max-width:980px){
+    .app{grid-template-columns:1fr; padding:8px}
+    aside.info{order:2}
+  }
+  @media (max-width:420px){
+    :root{--cell-size:36px;--gap:6px}
+    .seg button{padding:6px 8px}
+  }
+
+</style>
 </head>
 <body>
-  <div class="container" role="application" aria-label="Сапер">
+  <div class="app">
     <header>
-      <div>
-        <h1>
-          <span class="logo" aria-hidden>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#07101a"/><path d="M6 8L12 14L18 8" stroke="#f59e0b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </span>
-          Сапер — Modern
-        </h1>
-        <div style="color:var(--muted);font-size:13px;margin-top:6px">Перший клік безпечний · правий клік — прапорець · Enter — chord</div>
+      <div style="display:flex;gap:12px;align-items:center">
+        <div class="logo" aria-hidden>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="none" stroke="rgba(255,255,255,0.06)"/><path d="M6 8L12 14L18 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </div>
+        <div>
+          <h1>Сапер — Modern UI</h1>
+          <div style="font-size:13px;color:var(--muted)">Тема: автоматично за системою · Перший клік безпечний</div>
+        </div>
       </div>
 
       <div class="controls">
-        <div class="segmented" role="tablist" aria-label="Рівні складності">
+        <div class="seg" role="tablist" aria-label="Рівні">
           <button id="easyBtn">Easy</button>
           <button id="medBtn" class="active">Medium</button>
           <button id="hardBtn">Hard</button>
         </div>
-        <button id="restartBtn" class="btn" title="Restart">Restart</button>
+        <button id="restart" class="btn" title="Restart">Restart</button>
       </div>
     </header>
 
-    <main class="panel" role="main">
-      <div class="board-wrap">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-          <div class="stat-row" style="gap:12px">
-            <div class="stat">
-              <div style="font-size:12px;color:var(--muted)">Міни</div>
-              <div id="flagsLeft" style="font-size:18px;font-weight:800">0</div>
-            </div>
-            <div class="stat">
-              <div style="font-size:12px;color:var(--muted)">Стан</div>
-              <div id="status" style="font-size:14px">Готово</div>
-            </div>
-            <div class="stat">
-              <div style="font-size:12px;color:var(--muted)">Таймер</div>
-              <div id="timer" style="font-family:monospace;font-size:16px">00:00</div>
-            </div>
-          </div>
+    <section class="left panel">
+      <div class="top-stats">
+        <div class="stat">
+          <div class="label">Прапорці</div>
+          <div id="flags" class="value">0</div>
         </div>
-
-        <div id="board" class="board" tabindex="0" aria-label="Ігрове поле" ></div>
+        <div class="stat">
+          <div class="label">Статус</div>
+          <div id="status" class="value" style="font-size:14px">Готово</div>
+        </div>
+        <div class="stat">
+          <div class="label">Таймер</div>
+          <div id="timer" class="value">00:00</div>
+        </div>
       </div>
 
-      <aside class="info">
-        <div class="card">
-          <h3 style="margin:0 0 8px 0">Інструкція</h3>
-          <p style="margin:0;color:var(--muted);font-size:14px">
-            Правий клік ставить/знімає прапорець. Подвійний клік або натиск Enter при виділеній клітинці — автоматичний chord (відкриває сусідів, якщо кількість прапорців співпадає з числом).
-            Перший клік не вибухне — міни розміщуються після першого кліку з безпечною зоною навколо.
-          </p>
-        </div>
+      <div class="board-wrap panel" style="padding:12px">
+        <div id="board" class="board" tabindex="0" aria-label="Ігрове поле"></div>
+      </div>
+      <footer>Поради: правий клік — прапорець. Enter — chord. Стрілки — навігація.</footer>
+    </section>
 
-        <div class="card">
-          <h4 style="margin:0 0 8px 0">Поради</h4>
-          <ul style="margin:0;padding-left:18px;color:var(--muted);font-size:14px">
-            <li>Використовуйте стрілки для навігації, пробіл — відкрити, F — прапорець.</li>
-            <li>Налаштуйте складність зверху.</li>
-          </ul>
-        </div>
+    <aside class="info">
+      <div class="card">
+        <h4>Про гру</h4>
+        <p style="margin:0;color:var(--muted)">Сучасний інтерфейс, підтримка клавіатури, мобільна адаптація. Хочете додати локальний рейтинг або тіні іншого стилю — скажіть.</p>
+      </div>
 
-        <div class="card">
-          <div style="display:flex;gap:8px">
-            <button id="shareBtn" class="icon-btn" style="flex:1">Скопіювати посилання</button>
-            <button id="saveBtn" class="icon-btn" style="flex:1">Експорт стану</button>
-          </div>
+      <div class="card">
+        <h4>Опції</h4>
+        <div style="display:flex;gap:8px">
+          <button id="shareBtn" class="icon-btn">Поділитись</button>
+          <button id="exportBtn" class="icon-btn">Експорт</button>
         </div>
+      </div>
 
-        <div style="font-size:12px;color:var(--muted);margin-top:8px">Це базова, автономна версія. Потрібна версія з локальним рейтингом або мультиплеєр — напишу.</div>
-      </aside>
-    </main>
+      <div class="card">
+        <h4>Налаштування</h4>
+        <p style="margin:0;color:var(--muted);font-size:13px">Розмір клітин можна змінити: <input id="cellRange" type="range" min="30" max="60" value="40" style="width:100%"></p>
+      </div>
+    </aside>
   </div>
 
-  <script>
-    // ---------- SETTINGS ----------
-    const DIFFICULTIES = {
-      Easy: { rows: 9, cols: 9, mines: 10 },
-      Medium: { rows: 16, cols: 16, mines: 40 },
-      Hard: { rows: 16, cols: 30, mines: 99 },
-    };
-    let difficulty = 'Medium';
+<script>
+/* ---------- Game logic (modern HTML version) ---------- */
+const DIFF = {
+  Easy: {rows:9, cols:9, mines:10},
+  Medium: {rows:16, cols:16, mines:40},
+  Hard: {rows:16, cols:30, mines:99}
+};
 
-    // ---------- GAME STATE ----------
-    let rows, cols, mineCount;
-    let boardEl = document.getElementById('board');
-    let flagsLeftEl = document.getElementById('flagsLeft');
-    let statusEl = document.getElementById('status');
-    let timerEl = document.getElementById('timer');
+let difficulty = 'Medium';
+let rows=16, cols=16, mines=40;
+let board = []; // 2D cells
+let firstClick = true, started=false, alive=true, won=false;
+let timer=null, seconds=0;
+let flagsLeft = mines;
+let cursor = {x:0,y:0};
 
-    let board = []; // 2D array of cells {x,y,isMine,isRevealed,isFlagged,adjacent}
-    let firstClick = true;
-    let started = false;
-    let alive = true;
-    let won = false;
-    let timer = null;
-    let seconds = 0;
-    let cursor = {x:0,y:0};
+const boardEl = document.getElementById('board');
+const flagsEl = document.getElementById('flags');
+const statusEl = document.getElementById('status');
+const timerEl = document.getElementById('timer');
 
-    // ---------- INIT ----------
-    function initFromDifficulty(){
-      const opt = DIFFICULTIES[difficulty];
-      rows = opt.rows; cols = opt.cols; mineCount = opt.mines;
-      document.documentElement.style.setProperty('--cells', cols);
-      resetGame();
+function setDifficulty(d){
+  difficulty = d;
+  const opt = DIFF[d];
+  rows = opt.rows; cols = opt.cols; mines = opt.mines;
+  flagsLeft = mines;
+  flagsEl.textContent = flagsLeft;
+  document.getElementById('easyBtn').classList.toggle('active', d==='Easy');
+  document.getElementById('medBtn').classList.toggle('active', d==='Medium');
+  document.getElementById('hardBtn').classList.toggle('active', d==='Hard');
+  reset();
+}
+
+document.getElementById('easyBtn').addEventListener('click', ()=> setDifficulty('Easy'));
+document.getElementById('medBtn').addEventListener('click', ()=> setDifficulty('Medium'));
+document.getElementById('hardBtn').addEventListener('click', ()=> setDifficulty('Hard'));
+document.getElementById('restart').addEventListener('click', reset);
+
+document.getElementById('cellRange').addEventListener('input', (e)=>{
+  document.documentElement.style.setProperty('--cell-size', e.target.value+'px');
+});
+
+/* init */
+setDifficulty('Medium');
+
+function reset(){
+  clearInterval(timer); timer = null; seconds=0; updateTimer();
+  firstClick = true; started=false; alive=true; won=false;
+  flagsLeft = mines; flagsEl.textContent = flagsLeft;
+  statusEl.textContent = 'Готово';
+  board = [];
+  renderEmpty();
+}
+
+/* create grid */
+function renderEmpty(){
+  boardEl.innerHTML = '';
+  boardEl.style.gridTemplateColumns = `repeat(${cols}, var(--cell-size))`;
+  for(let i=0;i<rows;i++){
+    const row=[];
+    for(let j=0;j<cols;j++){
+      const cell = {x:i,y:j,isMine:false,isRevealed:false,isFlagged:false,adjacent:0,el:null};
+      const el = document.createElement('button');
+      el.className = 'cell hidden';
+      el.dataset.x=i; el.dataset.y=j;
+      el.addEventListener('click', ()=> onCellClick(cell));
+      el.addEventListener('contextmenu', (e)=> { e.preventDefault(); onCellRight(cell); });
+      el.addEventListener('dblclick', ()=> chord(cell));
+      cell.el = el;
+      boardEl.appendChild(el);
+      row.push(cell);
     }
+    board.push(row);
+  }
+  cursor = {x:0,y:0};
+  focusCursor();
+}
 
-    function resetGame(){
-      clearInterval(timer); timer = null; seconds = 0; updateTimer();
-      board = [];
-      firstClick = true; started = false; alive = true; won = false;
-      statusEl.textContent = 'Готово';
-      flagsLeftEl.textContent = mineCount;
-      // create empty data
-      for(let i=0;i<rows;i++){
-        const r = [];
-        for(let j=0;j<cols;j++){
-          r.push({x:i,y:j,isMine:false,isRevealed:false,isFlagged:false,adjacent:0,el:null});
-        }
-        board.push(r);
-      }
-      renderBoard();
+/* place mines avoiding safe zone (first click) */
+function placeMines(sx, sy){
+  let placed=0;
+  while(placed < mines){
+    const x = Math.floor(Math.random()*rows);
+    const y = Math.floor(Math.random()*cols);
+    if(board[x][y].isMine) continue;
+    // avoid safe 3x3
+    if(Math.abs(x-sx)<=1 && Math.abs(y-sy)<=1) continue;
+    board[x][y].isMine = true; placed++;
+  }
+  for(let i=0;i<rows;i++) for(let j=0;j<cols;j++){
+    if(board[i][j].isMine) continue;
+    board[i][j].adjacent = neighbors(i,j).filter(n=>n.isMine).length;
+  }
+}
+
+/* neighbors */
+function neighbors(x,y){
+  const out=[];
+  for(let dx=-1;dx<=1;dx++) for(let dy=-1;dy<=1;dy++){
+    if(dx===0 && dy===0) continue;
+    const nx=x+dx, ny=y+dy;
+    if(nx>=0 && ny>=0 && nx<rows && ny<cols) out.push(board[nx][ny]);
+  }
+  return out;
+}
+
+/* reveal logic */
+function onCellClick(cell){
+  if(!alive || won) return;
+  if(firstClick){
+    placeMines(cell.x, cell.y);
+    firstClick=false; started=true; startTimer();
+  }
+  if(cell.isFlagged || cell.isRevealed) return;
+  if(cell.isMine){
+    cell.isRevealed = true; updateCell(cell);
+    gameOver(false); return;
+  }
+  flood(cell.x, cell.y); updateAll();
+  checkWin();
+}
+
+function flood(sx, sy){
+  const stack=[[sx,sy]];
+  while(stack.length){
+    const [x,y]=stack.pop();
+    const c = board[x][y];
+    if(c.isRevealed || c.isFlagged) continue;
+    c.isRevealed = true;
+    if(c.adjacent===0){
+      neighbors(x,y).forEach(n=>{ if(!n.isRevealed && !n.isMine) stack.push([n.x,n.y]); });
     }
+  }
+}
 
-    // ---------- RENDER ----------
-    function renderBoard(){
-      // configure grid columns using inline CSS
-      boardEl.style.gridTemplateColumns = `repeat(${cols}, var(--cell-size))`;
-      boardEl.innerHTML = '';
-      for(let i=0;i<rows;i++){
-        for(let j=0;j<cols;j++){
-          const cell = board[i][j];
-          const btn = document.createElement('button');
-          btn.className = 'cell hidden';
-          btn.dataset.x = i; btn.dataset.y = j;
-          btn.setAttribute('aria-label', `cell-${i}-${j}`);
-          btn.addEventListener('click', (e)=> onCellClick(e, cell));
-          btn.addEventListener('contextmenu', (e)=> onCellRightClick(e, cell));
-          btn.addEventListener('dblclick', ()=> onCellDoubleClick(cell));
-          cell.el = btn;
-          boardEl.appendChild(btn);
-        }
-      }
-      focusCursor();
+/* right click - flag */
+function onCellRight(cell){
+  if(!alive || won || cell.isRevealed) return;
+  cell.isFlagged = !cell.isFlagged;
+  flagsLeft += cell.isFlagged ? -1 : 1;
+  flagsEl.textContent = flagsLeft;
+  updateCell(cell);
+}
+
+/* chord (double-click or Enter) */
+function chord(cell){
+  if(!cell.isRevealed || cell.adjacent===0) return;
+  const neigh = neighbors(cell.x, cell.y);
+  const flagged = neigh.filter(n=>n.isFlagged).length;
+  if(flagged === cell.adjacent){
+    neigh.forEach(n=> { if(!n.isFlagged && !n.isRevealed) onCellClick(n); });
+  }
+}
+
+/* update DOM of a cell */
+function updateCell(c){
+  const el = c.el;
+  el.classList.toggle('revealed', c.isRevealed);
+  el.classList.toggle('hidden', !c.isRevealed);
+  el.classList.toggle('mine', c.isMine && c.isRevealed);
+  el.innerHTML = '';
+  el.classList.toggle('cursor-outline', cursor.x===c.x && cursor.y===c.y);
+  if(!c.isRevealed){
+    if(c.isFlagged) el.innerHTML = '<span class="flag">⚑</span>';
+  } else {
+    if(c.isMine) el.innerHTML = '&#x1F4A3;';
+    else if(c.adjacent>0){
+      const sp = document.createElement('span');
+      sp.textContent = c.adjacent;
+      sp.className = 'n'+c.adjacent;
+      el.appendChild(sp);
     }
+  }
+}
 
-    // ---------- HELPERS ----------
-    function neighbors(x,y){
-      const list = [];
-      for(let dx=-1;dx<=1;dx++){
-        for(let dy=-1;dy<=1;dy++){
-          if(dx===0 && dy===0) continue;
-          const nx = x+dx, ny = y+dy;
-          if(nx>=0 && ny>=0 && nx<rows && ny<cols) list.push(board[nx][ny]);
-        }
-      }
-      return list;
+function updateAll(){ for(let i=0;i<rows;i++) for(let j=0;j<cols;j++) updateCell(board[i][j]); }
+
+/* win/lose */
+function checkWin(){
+  let unrevealedNonMines = 0;
+  for(let i=0;i<rows;i++) for(let j=0;j<cols;j++){
+    const c = board[i][j];
+    if(!c.isMine && !c.isRevealed) unrevealedNonMines++;
+  }
+  if(unrevealedNonMines===0 && alive){
+    won=true; started=false; clearInterval(timer);
+    statusEl.textContent = '🎉 Ви перемогли!';
+    // auto-flag mines
+    for(let i=0;i<rows;i++) for(let j=0;j<cols;j++){
+      if(board[i][j].isMine){ board[i][j].isFlagged = true; updateCell(board[i][j]); }
     }
+  }
+}
 
-    function placeMines(safeX,safeY){
-      let placed = 0;
-      while(placed < mineCount){
-        const x = Math.floor(Math.random()*rows);
-        const y = Math.floor(Math.random()*cols);
-        const cell = board[x][y];
-        if(cell.isMine) continue;
-        // avoid safe zone
-        if(Math.abs(x-safeX)<=1 && Math.abs(y-safeY)<=1) continue;
-        cell.isMine = true;
-        placed++;
-      }
-      // adjacent counts
-      for(let i=0;i<rows;i++){
-        for(let j=0;j<cols;j++){
-          if(board[i][j].isMine) continue;
-          board[i][j].adjacent = neighbors(i,j).filter(n=>n.isMine).length;
-        }
-      }
+function gameOver(win){
+  started=false; alive=false; clearInterval(timer);
+  if(!win){
+    statusEl.textContent = '💥 Ви програли!';
+    // reveal mines
+    for(let i=0;i<rows;i++) for(let j=0;j<cols;j++){
+      if(board[i][j].isMine){ board[i][j].isRevealed = true; updateCell(board[i][j]); }
     }
+  } else {
+    statusEl.textContent = '🎉 Ви перемогли!';
+  }
+}
 
-    function revealAllMines(){
-      for(let i=0;i<rows;i++){
-        for(let j=0;j<cols;j++){
-          const c = board[i][j];
-          if(c.isMine){
-            c.isRevealed = true;
-            updateCellElement(c);
-          }
-        }
-      }
-    }
+/* timer */
+function startTimer(){
+  clearInterval(timer);
+  timer = setInterval(()=>{ seconds++; updateTimer(); }, 1000);
+}
+function updateTimer(){
+  const mm = Math.floor(seconds/60), ss=seconds%60;
+  timerEl.textContent = String(mm).padStart(2,'0') + ':' + String(ss).padStart(2,'0');
+}
 
-    function floodReveal(sx,sy){
-      const stack = [[sx,sy]];
-      while(stack.length){
-        const [x,y] = stack.pop();
-        const c = board[x][y];
-        if(c.isRevealed || c.isFlagged) continue;
-        c.isRevealed = true; updateCellElement(c);
-        if(c.adjacent === 0){
-          neighbors(x,y).forEach(n=>{
-            if(!n.isRevealed && !n.isMine) stack.push([n.x,n.y]);
-          });
-        }
-      }
-    }
+/* keyboard navigation */
+document.addEventListener('keydown', (e)=>{
+  if(!board.length) return;
+  const key = e.key;
+  if(key==='ArrowUp'){ e.preventDefault(); cursor.x = Math.max(0, cursor.x-1); focusCursor(); }
+  if(key==='ArrowDown'){ e.preventDefault(); cursor.x = Math.min(rows-1, cursor.x+1); focusCursor(); }
+  if(key==='ArrowLeft'){ e.preventDefault(); cursor.y = Math.max(0, cursor.y-1); focusCursor(); }
+  if(key==='ArrowRight'){ e.preventDefault(); cursor.y = Math.min(cols-1, cursor.y+1); focusCursor(); }
+  if(key===' '){ e.preventDefault(); onCellClick(board[cursor.x][cursor.y]); }
+  if(key.toLowerCase()==='f'){ e.preventDefault(); onCellRight(board[cursor.x][cursor.y]); }
+  if(key==='Enter'){ e.preventDefault(); chord(board[cursor.x][cursor.y]); }
+});
 
-    function checkWin(){
-      let unrevealedNonMines = 0;
-      for(let i=0;i<rows;i++){
-        for(let j=0;j<cols;j++){
-          const c = board[i][j];
-          if(!c.isMine && !c.isRevealed) unrevealedNonMines++;
-        }
-      }
-      if(unrevealedNonMines === 0 && alive){
-        won = true; alive = true; started = false;
-        statusEl.textContent = 'Виграно 🎉';
-        // auto-flag mines
-        for(let i=0;i<rows;i++){
-          for(let j=0;j<cols;j++){
-            const c = board[i][j];
-            if(c.isMine){ c.isFlagged = true; updateCellElement(c); }
-          }
-        }
-        clearInterval(timer);
-      }
-    }
+function focusCursor(){
+  cursor.x = Math.max(0, Math.min(rows-1, cursor.x));
+  cursor.y = Math.max(0, Math.min(cols-1, cursor.y));
+  updateAll();
+  const el = board[cursor.x][cursor.y].el;
+  if(el) el.scrollIntoView({block:'nearest', inline:'nearest', behavior:'smooth'});
+}
 
-    function updateCellElement(c){
-      const el = c.el;
-      if(!el) return;
-      el.classList.toggle('revealed', c.isRevealed);
-      el.classList.toggle('hidden', !c.isRevealed);
-      el.classList.toggle('mine', c.isMine);
-      el.classList.toggle('cursor-outline', cursor.x===c.x && cursor.y===c.y);
-      el.innerHTML = '';
-      if(!c.isRevealed){
-        if(c.isFlagged){
-          el.innerHTML = '<span class="flag">⚑</span>';
-        }
-      } else {
-        if(c.isMine){
-          el.innerHTML = '&#x1F4A3;'; // bomb emoji
-        } else if(c.adjacent>0){
-          const n = document.createElement('div');
-          n.textContent = c.adjacent;
-          n.className = 'n'+c.adjacent;
-          el.appendChild(n);
-        } else {
-          // empty revealed
-        }
-      }
-    }
+/* share/export */
+document.getElementById('shareBtn').addEventListener('click', async ()=>{
+  try{
+    await navigator.clipboard.writeText(location.href);
+    const b = document.getElementById('shareBtn');
+    b.textContent = 'Скопійовано!';
+    setTimeout(()=> b.textContent='Поділитись',1200);
+  }catch{ alert('Не вдалося скопіювати'); }
+});
 
-    function updateAllCells(){
-      for(let i=0;i<rows;i++){
-        for(let j=0;j<cols;j++) updateCellElement(board[i][j]);
-      }
-    }
+document.getElementById('exportBtn').addEventListener('click', ()=>{
+  const state = {rows,cols,mines,firstClick,started,alive,seconds,cells:board.flat().map(c=>({x:c.x,y:c.y,isRevealed:c.isRevealed,isFlagged:c.isFlagged,isMine:c.isMine,adjacent:c.adjacent}))};
+  const blob = new Blob([JSON.stringify(state)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='saper-state.json'; a.click();
+  URL.revokeObjectURL(url);
+});
 
-    // ---------- EVENTS ----------
-    function onCellClick(e, cell){
-      if(!alive || won) return;
-      if(firstClick){
-        placeMines(cell.x, cell.y);
-        firstClick = false;
-        started = true;
-        startTimer();
-      }
-      if(cell.isFlagged || cell.isRevealed) return;
-      if(cell.isMine){
-        // lose
-        cell.isRevealed = true;
-        updateCellElement(cell);
-        revealAllMines();
-        alive = false; started = false; statusEl.textContent = 'Програш ☠️';
-        clearInterval(timer);
-        updateAllCells();
-        return;
-      }
-      floodReveal(cell.x, cell.y);
-      updateAllCells();
-      checkWin();
-    }
-
-    function onCellRightClick(e, cell){
-      e.preventDefault();
-      if(!alive || won) return;
-      if(cell.isRevealed) return;
-      if(cell.isFlagged){
-        cell.isFlagged = false;
-        mineCount && (flagsLeftEl.textContent = Number(flagsLeftEl.textContent) + 1);
-      } else {
-        // only allow flag if flagsLeft > 0
-        const left = Number(flagsLeftEl.textContent);
-        if(left <= 0) return;
-        cell.isFlagged = true;
-        flagsLeftEl.textContent = left - 1;
-      }
-      updateCellElement(cell);
-    }
-
-    function onCellDoubleClick(cell){
-      if(!cell.isRevealed) return;
-      const neigh = neighbors(cell.x, cell.y);
-      const flagged = neigh.filter(n=>n.isFlagged).length;
-      if(flagged === cell.adjacent){
-        neigh.forEach(n=>{
-          if(!n.isFlagged && !n.isRevealed){
-            onCellClick(null, n);
-          }
-        });
-      }
-    }
-
-    // keyboard navigation + actions
-    document.addEventListener('keydown', (e)=>{
-      if(!board.length) return;
-      const key = e.key;
-      if(key === 'ArrowUp'){ e.preventDefault(); cursor.x = Math.max(0, cursor.x-1); focusCursor(); }
-      if(key === 'ArrowDown'){ e.preventDefault(); cursor.x = Math.min(rows-1, cursor.x+1); focusCursor(); }
-      if(key === 'ArrowLeft'){ e.preventDefault(); cursor.y = Math.max(0, cursor.y-1); focusCursor(); }
-      if(key === 'ArrowRight'){ e.preventDefault(); cursor.y = Math.min(cols-1, cursor.y+1); focusCursor(); }
-      if(key === ' '){ e.preventDefault(); const c = board[cursor.x][cursor.y]; onCellClick(null,c); }
-      if(key.toLowerCase() === 'f'){ e.preventDefault(); const c = board[cursor.x][cursor.y]; onCellRightClick(new Event('contextmenu'), c); }
-      if(key === 'Enter'){ e.preventDefault(); const c = board[cursor.x][cursor.y]; onCellDoubleClick(c); }
-    });
-
-    function focusCursor(){
-      // ensure cursor within bounds
-      cursor.x = Math.max(0, Math.min(rows-1, cursor.x));
-      cursor.y = Math.max(0, Math.min(cols-1, cursor.y));
-      // update element outlines
-      updateAllCells();
-      // ensure visible
-      const el = board[cursor.x][cursor.y].el;
-      if(el) el.scrollIntoView({block:'nearest', inline:'nearest', behavior:'smooth'});
-    }
-
-    // ---------- Timer ----------
-    function startTimer(){
-      if(timer) clearInterval(timer);
-      timer = setInterval(()=>{
-        seconds++; updateTimer();
-      },1000);
-    }
-    function updateTimer(){
-      const mm = Math.floor(seconds/60);
-      const ss = seconds%60;
-      timerEl.textContent = String(mm).padStart(2,'0') + ':' + String(ss).padStart(2,'0');
-    }
-
-    // ---------- difficulty controls ----------
-    document.getElementById('easyBtn').addEventListener('click', ()=>{
-      difficulty = 'Easy'; setActiveSeg('easyBtn'); initFromDifficulty();
-    });
-    document.getElementById('medBtn').addEventListener('click', ()=>{
-      difficulty = 'Medium'; setActiveSeg('medBtn'); initFromDifficulty();
-    });
-    document.getElementById('hardBtn').addEventListener('click', ()=>{
-      difficulty = 'Hard'; setActiveSeg('hardBtn'); initFromDifficulty();
-    });
-    document.getElementById('restartBtn').addEventListener('click', ()=> initFromDifficulty());
-
-    function setActiveSeg(id){
-      ['easyBtn','medBtn','hardBtn'].forEach(i=> document.getElementById(i).classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-    }
-
-    // ---------- share/export ----------
-    document.getElementById('shareBtn').addEventListener('click', async ()=>{
-      try{
-        await navigator.clipboard.writeText(location.href);
-        document.getElementById('shareBtn').textContent = 'Скопійовано!';
-        setTimeout(()=> document.getElementById('shareBtn').textContent = 'Скопіювати посилання', 1500);
-      }catch(e){
-        alert('Не вдалось скопіювати посилання');
-      }
-    });
-
-    document.getElementById('saveBtn').addEventListener('click', ()=>{
-      // export minimal game state (cells revealed/flags), JSON
-      const state = {
-        rows,cols,mineCount, firstClick, started, alive, seconds,
-        cells: board.flat().map(c=>({x:c.x,y:c.y,isRevealed:c.isRevealed,isFlagged:c.isFlagged,isMine:c.isMine?true:false,adjacent:c.adjacent}))
-      };
-      const data = JSON.stringify(state);
-      const blob = new Blob([data], {type:'application/json'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = 'minesweeper-state.json'; a.click();
-      URL.revokeObjectURL(url);
-    });
-
-    // ---------- init first time ----------
-    initFromDifficulty();
-
-    // accessibility: focus board on load
-    setTimeout(()=> boardEl.focus(), 200);
-
-  </script>
+/* initialize */
+reset();
+/* focus board for keyboard */
+setTimeout(()=> boardEl.focus(),200);
+</script>
 </body>
 </html>
